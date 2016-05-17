@@ -50,12 +50,6 @@ if __name__ == '__main__':
     mu = np.load(model_root + 'mean.npy')
 
 
-    # model_def     = model_root + 'deploy.prototxt'
-    # model_weights = model_root + 'bvlc_reference_caffenet.caffemodel'
-    # mu = np.load(caffe_root + 'python/caffe/imagenet/ilsvrc_2012_mean.npy')
-
-
-
     # Create transformer for the input called 'data'
     transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
     transformer.set_transpose('data', (2,0,1))     # rearrange dimensions
@@ -87,15 +81,10 @@ if __name__ == '__main__':
         #  images to process in this batch
         diff = batch_size - len(images) 
         if diff > 0:
-            # print 'DIFF'
             images += [images[-1]] * diff
             batch_files += ['']
 
         # Input batch data to CNN, forward propogate information
-        # import ipdb; ipdb.set_trace()
-        # print '-'*60 , b
-        # print net.blobs['data'].data.shape
-        # print len(images), batch_size, b, diff
         net.blobs['data'].data[...] = np.stack(images, axis=0)
         net.forward()
 
@@ -108,25 +97,4 @@ if __name__ == '__main__':
     # Save blobs
     df = pd.DataFrame(rows)
     df.to_pickle(out_file)
-
-
-    ## Below: code for saving blobs as separate .npy files instead of as a DataFrame
-    #
-    # if not os.path.exists(out_dir): os.makedirs(out_dir)
-    #    
-    # shapes = {}
-    # for blob in save_blobs:
-    #     m = np.stack(df[blob], axis=0)
-    #     np.save(out_dir + '/' + blob, m)
-    #     shapes[blob] = m.shape
-    #     print blob, '\t', m.shape
-
-    # pickle.dump(shapes, open(out_dir + '/' + 'shapes.pk','w'))
-
-    # # Indexes in blobs for each image
-    # imgs = df['image']
-    # d = {im:pd.Index(imgs).get_loc(im) for im in imgs}
-    # pickle.dump(d, open(out_dir + '/' + 'img_index.pk','w'))
-
-
-
+    

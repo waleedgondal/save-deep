@@ -28,6 +28,23 @@ Requires
 * PyCaffe
 
 
-TODO
-----
-I'm working on wrapping this in a docker image, so less savvy users won't have to deal with installing PyCaffe locally on their machines.
+Notes
+-----
+* I'm working on wrapping this in a docker image, so less savvy users won't have to deal with installing PyCaffe locally on their machines.
+* The first 2 layers take up a lot of space, the following convolution layers quite a bit of space, and the fully connected layers, very little space. The amount of space taken up by activation data by each layer, for each image, is approximately:
+    - conv1 : 894 kB
+    - conv2 : 574 kB
+    - conv3 : 200 kB
+    - conv4 : 200 kB
+    - conv5 : 133 kB
+    - fc6   : 12 kB
+    - fc7   : 12 kB
+    - fc8   : 3 kB
+    - norm1 : 215 kB
+    - norm2 : 133 kB
+    - pool1 : 215 kB
+    - pool2 : 133 kB
+    - pool5 : 28 kB
+    - prob  : 3 kB
+
+
