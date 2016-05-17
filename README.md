@@ -33,19 +33,35 @@ Notes
 * I'm working on wrapping this in a docker image, so less savvy users won't have to deal with installing PyCaffe locally on their machines.
 * The first 2 layers take up a lot of space, the following convolution layers quite a bit of space, and the fully connected layers, very little space. The amount of space taken up by activation data by each layer of AlexNet, for each image, is approximately:
 
-| Depth | Layer     | Mem/Img |
-|-------|-----------|---------|
-| 1.    | **conv1** | 894 kB  |
-| 2.    | **pool1** | 215 kB  |
-| 3.    | **norm1** | 215 kB  |
-| 4.    | **conv2** | 574 kB  |
-| 5.    | **pool2** | 133 kB  |
-| 6.    | **norm2** | 133 kB  |
-| 7.    | **conv3** | 200 kB  |
-| 8.    | **conv4** | 200 kB  |
-| 9.    | **conv5** | 133 kB  |
-| 10.   | **pool5** | 28 kB   |
-| 11.   | **fc6**   | 12 kB   |
-| 12.   | **fc7**   | 12 kB   |
-| 13.   | **fc8**   | 3 kB    |
-| 14.   | **prob**  | 3 kB    |
+| Depth | Layer     | Shape         | Mem/Img |
+|-------|-----------|---------------|---------|
+| 1.    | **conv1** | (96, 55, 55)  | 894 kB  |
+| 2.    | **pool1** | (96, 27, 27)  | 215 kB  |
+| 3.    | **norm1** | (96, 27, 27)  | 215 kB  |
+| 4.    | **conv2** | (256, 27, 27) | 574 kB  |
+| 5.    | **pool2** | (256, 13, 13) | 133 kB  |
+| 6.    | **norm2** | (256, 13, 13) | 133 kB  |
+| 7.    | **conv3** | (384, 13, 13) | 200 kB  |
+| 8.    | **conv4** | (384, 13, 13) | 200 kB  |
+| 9.    | **conv5** | (256, 13, 13) | 133 kB  |
+| 10.   | **pool5** | (256, 6, 6)   | 28 kB   |
+| 11.   | **fc6**   | (4096,)       | 12 kB   |
+| 12.   | **fc7**   | (4096,)       | 12 kB   |
+| 13.   | **fc8**   | (1000,)       | 3 kB    |
+| 14.   | **prob**  | (1000,)       | 3 kB    |
+
+
+conv1 (96, 55, 55)
+pool1 (96, 27, 27)
+norm1 (96, 27, 27)
+conv2 (256, 27, 27)
+pool2 (256, 13, 13)
+norm2 (256, 13, 13)
+conv3 (384, 13, 13)
+conv4 (384, 13, 13)
+conv5 (256, 13, 13)
+pool5 (256, 6, 6)
+fc6   (4096,)
+fc7   (4096,)
+fc8   (1000,)
+prob  (1000,)
