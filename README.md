@@ -21,6 +21,16 @@ The following code downloads AlexNet to your caffe folder, then creates the appr
     $ ln -s $CAFFE_ROOT/python/caffe/imagenet/ilsvrc_2012_mean.npy models/alexnet/mean.npy
     $ mkdir out
 
+We might also write symbolic links to our images folder as well, for convenience:
+
+    $ ln -s /path/to/images images
+
+Then we could do a run, saving just the fully connected layers of AlexNet by executing:
+
+    $ python save.py -m ./model -b fc6,fc7,fc7 -i ./images -o ./out
+
+
+
 
 Requires
 --------
