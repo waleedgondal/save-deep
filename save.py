@@ -5,20 +5,15 @@ import pickle
 import os
 from optparse import OptionParser
 
-all_blobs = ['conv1', 'pool1', 'norm1', 'conv2', 'pool2', 'norm2', 
-             'conv3', 'conv4', 'conv5', 'pool5', 
-             'fc6', 'fc7', 'fc8', 'prob']
-all_blobs = ','.join(all_blobs)
-
 
 if __name__ == '__main__':
 
     parser = OptionParser()
     parser.add_option("-m", "--model", dest="model_root", 
-                      type="string", default="models/bvlc_reference_caffenet/",
+                      type="string", default="models/bvlc_reference_caffenet",
                       help="Model directory.")
     parser.add_option("-b", "--blobs", dest="save_blobs", 
-                      type="string", default=all_blobs,
+                      type="string", default="all",
                       help="List of blobs to save, e.g. 'fc6,fc7,fc7'.")
     parser.add_option("-i", "--imgs", dest="img_dir", 
                       type="string", default="images",
@@ -39,15 +34,15 @@ if __name__ == '__main__':
   
 
     # Load caffe model
-    model_def     = model_root + 'deploy.prototxt'
-    model_weights = model_root + 'weights.caffemodel'
+    model_def     = model_root + '/deploy.prototxt'
+    model_weights = model_root + '/weights.caffemodel'
 
     net = caffe.Net(model_def,      # defines the structure of the model
                     model_weights,  # contains the trained weights
                     caffe.TEST)     # use test mode (e.g., don't perform dropout)
 
     # Load RGB means for subtraction
-    mu = np.load(model_root + 'mean.npy')
+    mu = np.load(model_root + '/mean.npy')
 
 
     # Create transformer for the input called 'data'
@@ -69,11 +64,10 @@ if __name__ == '__main__':
     for b in range(n_batches):
         images = []
         batch_files = img_files[b:b+batch_size]
-        # print '*'*100,'\nBATCH  ', batch_files 
 
         # Load & transform image data for this batch
         for img_file in batch_files:
-            image = caffe.io.load_image(img_dir + img_file)
+            image = caffe.io.load_image(img_dir + '/' + img_file)
             transformed_image = transformer.preprocess('data', image)
             images.append(transformed_image)
 
@@ -90,11 +84,13 @@ if __name__ == '__main__':
 
         # One row per image
         for i, img_file in enumerate(batch_files):
-            row = {blob:net.blobs[blob].data[i] for blob in save_blobs if blob != ''}
+            if save_blobs[0] == 'all':
+                row = {blob:net.blobs[blob].data[i] for blob in net.blobs if blob != 'data'}
+            else:
+                row = {blob:net.blobs[blob].data[i] for blob in save_blobs}
             row['image'] = img_file
             rows.append(row)
 
     # Save blobs
     df = pd.DataFrame(rows)
     df.to_pickle(out_file)
-    
