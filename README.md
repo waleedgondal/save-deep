@@ -11,7 +11,7 @@ The primary script to run is `save.py`, which takes 4 command-line args:
 
 For the '--model' argument to `save.py`, you'll need 3 files in the directory: `deploy.prototxt`, `weights.caffemodel`, and `mean.npy`. `.prototxt` and `.caffemodel` are the standard distribution format for deep neural models trained using Caffe. `mean.npy` is a vector of mean BGR values over all images in the training set, so this is a 3-index Numpy array.
 
-The following code downloads AlexNet to your caffe folder, then creates the appropriate symbolic links for each of the three needed files:
+The following code downloads (AlexNet)[https://github.com/BVLC/caffe/tree/master/models/bvlc_alexnet] to your caffe folder, then creates the appropriate symbolic links for each of the three needed files:
 
     $ CAFFE_ROOT="/path/to/caffe"
     $ $CAFFE_ROOT/scripts/download_model_binary.py $CAFFE_ROOT/models/bvlc_reference_caffenet
@@ -41,7 +41,7 @@ Requires
 Notes
 -----
 * I'm working on wrapping this in a docker image, so less savvy users won't have to deal with installing PyCaffe locally on their machines.
-* The first 2 layers take up a lot of space, the following convolution layers quite a bit of space, and the fully connected layers, very little space. The amount of space taken up by activation data by each layer of AlexNet, for each image, is approximately:
+* The first 2 layers take up a lot of space, the following convolution layers quite a bit of space, and the fully connected layers, very little space. The amount of space on disk taken up by activation data for a single image, for each layer of AlexNet, is approximately:
 
 | Depth | Layer     | Shape         | Mem/Img |
 |-------|-----------|---------------|---------|
@@ -61,3 +61,10 @@ Notes
 | 14.   | **prob**  | (1000,)       | 3 kB    |
 
 Space is linear with the number of neurons, at approximately 3 bytes per image for each neuron.
+
+
+TODO
+----
+- write script to get 3-channel mean for a directory of images
+- make Docker script work, then write separate execution instructions
+- possibly write cleanup script for non-docker version
