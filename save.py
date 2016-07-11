@@ -79,7 +79,7 @@ if __name__ == '__main__':
             batch_files += ['']
 
         # Input batch data to CNN, forward propogate information
-        net.blobs['data'].data[...] = np.stack(images, axis=0)
+        net.blobs['data'].data[...] = np.vstack([img[None,...] for img in images])
         net.forward()
 
         # One row per image
