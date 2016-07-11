@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     model_root = options.model_root
     save_blobs = options.save_blobs.split(',')
-    img_dir = './images/'
+    img_dir    = options.img_dir
 
     out_file   = options.out_file
   
