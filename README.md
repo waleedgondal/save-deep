@@ -3,6 +3,8 @@ save-deep
 
 This is a package for saving activations of a specified set of layers for a given Caffe-format deep neural network model, in response to each image in a specified directory. This is useful for doing experiments related to how neurons in specific layers respond to particular stimuli. This saves output to a pandas DataFrame, where every row has a corresponding 'image', as well as tensors indexed by blog name (e.g. 'fc6', 'fc7', ...).
 
+Since PyCaffe can be a bit of a hassel to setup, everything can be run from within a Docker image. In other words, all you need to install is Docker, then just run the `run_docker.sh` script! This uses a (pre-packaged Docker image)[https://github.com/saiprashanths/dl-docker] with Caffe and other needed libraries pre-installed.
+
 The primary script to run is `save.py`, which takes 4 command-line args:
 * `-m`/`--model`: Model directory.
 * `-b`/`--blobs`: List of blobs to save, e.g. 'fc6,fc7,fc7'.
@@ -11,36 +13,86 @@ The primary script to run is `save.py`, which takes 4 command-line args:
 
 For the '--model' argument to `save.py`, you'll need 3 files in the directory: `deploy.prototxt`, `weights.caffemodel`, and `mean.npy`. `.prototxt` and `.caffemodel` are the standard distribution format for deep neural models trained using Caffe. `mean.npy` is a vector of mean BGR values over all images in the training set, so this is a 3-index Numpy array.
 
+### Download an example convolutional neural network (CNN) model to use
+
+#### Option 1: AlexNet through caffe
+
+If you don't already have caffe downloaded, clone the git repo:
+
+    $ git clone https://github.com/BVLC/caffe
+
 The following code downloads (AlexNet)[https://github.com/BVLC/caffe/tree/master/models/bvlc_alexnet] to your caffe folder, then creates the appropriate symbolic links for each of the three needed files:
 
     $ CAFFE_ROOT="/path/to/caffe"
     $ $CAFFE_ROOT/scripts/download_model_binary.py $CAFFE_ROOT/models/bvlc_reference_caffenet
     $ mkdir -p models/alexnet
-    $ ln -s $CAFFE_ROOT/models/bvlc_reference_caffenet/deploy.prototxt models/alexnet/deploy.prototxt
-    $ ln -s $CAFFE_ROOT/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel models/alexnet/weights.caffemodel
-    $ ln -s $CAFFE_ROOT/python/caffe/imagenet/ilsvrc_2012_mean.npy models/alexnet/mean.npy
+    $ ln -s $CAFFE_ROOT/models/bvlc_reference_caffenet/deploy.prototxt ./models/alexnet/deploy.prototxt
+    $ ln -s $CAFFE_ROOT/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel ./models/alexnet/weights.caffemodel
+    $ ln -s $CAFFE_ROOT/python/caffe/imagenet/ilsvrc_2012_mean.npy ./models/alexnet/mean.npy
     $ mkdir out
+    
+#### Option 2: Other caffe models
+    
+Alternatively, download a caffe model from the (Caffe Model Zoo)[https://github.com/BVLC/caffe/wiki/Model-Zoo]. Make sure to include `deploy.prototxt`, `weights.caffemodel`, and `mean.npy` files in your model directory.
 
-We might also write symbolic links to our images folder as well, for convenience:
+Note that many models will not include `mean.npy` -- you will have to create one, for example if the BGR (blue, green, red) mean is `[60, 80, 100]`:
 
-    $ ln -s /path/to/images images
+    $ python
+    $ >>> import numpy as np
+    $ >>> mean = np.array([60,80,100])
+    $ >>> np.save('./model/mean', mean)
 
-Then we could do a run, saving just the fully connected layers of AlexNet by executing:
+### Set up images folder
+
+All you need for this is a folder with your images in it.
+
+We might also write symbolic links in the save-deep `directory` to our images folder as well, for convenience:
+
+    $ ln -s /path/to/images ./images
+    
+### Create directory for outputting activation data
+
+    $ mkdir ./out
+
+    
+### Run the model
+
+#### Option 1: Run through docker
+
+For less savvy users, all you have to do after setting up your `model`, `images`, and `output` directories is run the `run_docker.sh` script with your parameters. For example:
+
+    $ sh run_docker.sh /Users/eric/code/save-deep/docker1 /Users/eric/code/save-deep/models/alexnet /Users/eric/code/save-deep/images
+    
+**Note**: Make sure you use the *full file path* for your directories!
+
+
+#### Option 2: Install PyCaffe and run python script directly
+
+You first need to (install and setup pycaffe on your own machine)[http://installing-caffe-the-right-way.wikidot.com/start], and install the pandas package: 
+
+    $ pip install pandas
+
+You may then run the `save.py` script directly, saving just the fully connected layers of AlexNet by executing:
 
     $ python save.py -m ./model -b fc6,fc7,fc7 -i ./images -o ./out
 
 
 
 
+
 Requires
 --------
-* Pandas
-* PyCaffe
+* (Docker)[https://www.docker.com/products/docker]
+* ~3gb of space
+
+OR
+
+* (Pandas)[http://pandas.pydata.org/]
+* (PyCaffe)[http://installing-caffe-the-right-way.wikidot.com/start]
 
 
 Notes
 -----
-* I'm working on wrapping this in a docker image, so less savvy users won't have to deal with installing PyCaffe locally on their machines.
 * The first 2 layers take up a lot of space, the following convolution layers quite a bit of space, and the fully connected layers, very little space. The amount of space on disk taken up by activation data for a single image, for each layer of AlexNet, is approximately:
 
 | Depth | Layer     | Shape         | Mem/Img |
@@ -66,5 +118,4 @@ Space is linear with the number of neurons, at approximately 3 bytes per image f
 TODO
 ----
 - write script to get 3-channel mean for a directory of images
-- make Docker script work, then write separate execution instructions
-- possibly write cleanup script for non-docker version
+- specifying layers when calling the `run_docker.sh` script currently does not work... saving all layers works, though
