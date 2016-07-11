@@ -13,6 +13,23 @@ The primary script to run is `save.py`, which takes 4 command-line args:
 
 For the '--model' argument to `save.py`, you'll need 3 files in the directory: `deploy.prototxt`, `weights.caffemodel`, and `mean.npy`. `.prototxt` and `.caffemodel` are the standard distribution format for deep neural models trained using Caffe. `mean.npy` is a vector of mean BGR values over all images in the training set, so this is a 3-index Numpy array.
 
+
+
+Requires
+--------
+* (Docker)[https://www.docker.com/products/docker]
+* ~3gb of space
+
+OR
+
+* (Pandas)[http://pandas.pydata.org/]
+* (PyCaffe)[http://installing-caffe-the-right-way.wikidot.com/start]
+
+
+Usage Instructions
+------------------
+
+
 ### Download an example convolutional neural network (CNN) model to use
 
 #### Option 1: AlexNet through caffe
@@ -78,17 +95,6 @@ You may then run the `save.py` script directly, saving just the fully connected 
 
 
 
-
-
-Requires
---------
-* (Docker)[https://www.docker.com/products/docker]
-* ~3gb of space
-
-OR
-
-* (Pandas)[http://pandas.pydata.org/]
-* (PyCaffe)[http://installing-caffe-the-right-way.wikidot.com/start]
 
 
 Notes
