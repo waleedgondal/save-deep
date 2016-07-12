@@ -124,4 +124,3 @@ Space is linear with the number of neurons, at approximately 3 bytes per image f
 TODO
 ----
 - write script to get 3-channel mean for a directory of images
-- specifying layers when calling the `run_docker.sh` script currently does not work... saving all layers works, though
