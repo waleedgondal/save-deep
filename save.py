@@ -85,9 +85,9 @@ if __name__ == '__main__':
         # One row per image
         for i, img_file in enumerate(batch_files):
             if save_blobs[0] == 'all':
-                print net.blobs.keys()
                 row = {blob:net.blobs[blob].data[i] for blob in net.blobs if blob != 'data'}
             else:
+                print net.blobs.keys()
                 row = {blob:net.blobs[blob].data[i] for blob in save_blobs}
             row['image'] = img_file
             rows.append(row)
