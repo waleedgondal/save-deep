@@ -12,19 +12,22 @@
 # Example call
 # ------------
 # sh run_docker.sh /Users/eric/code/save-deep/docker1 \
+#                  activations.pk \
 #                  /Users/eric/code/save-deep/models/alexnet \
-#                  /Users/eric/code/save-deep/images
+#                  /Users/eric/code/save-deep/images \
+#                  "fc6,fc7,fc8,prob"
 #
 
 out_dir=$1
-model_dir=$2
-image_dir=$3
+out_file=$2
+model_dir=$3
+image_dir=$4
 
 # If no blobs argument, use all alexnet blobs 
-if [[ ! $variable ]]; then
+if [[ ! $5 ]]; then
     blobs="conv1,pool1,norm1,conv2,pool2,norm2,conv3,conv4,conv5,pool5,fc6,fc7,fc8,prob"
 else
-    blobs=$4    
+    blobs=$5
 fi
 
 # Make source directory, and link models/images to this
