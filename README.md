@@ -116,7 +116,3 @@ Notes
 
 Space is linear with the number of neurons, at approximately 3 bytes per image for each neuron.
 
-
-TODO
-----
-- write script to get 3-channel mean for a directory of images
