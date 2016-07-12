@@ -3,7 +3,7 @@ save-deep
 
 This is a package for saving activations of a specified set of layers for a given Caffe-format deep neural network model, in response to each image in a specified directory. This is useful for doing experiments related to how neurons in specific layers respond to particular stimuli. This saves output to a pandas DataFrame, where every row has a corresponding 'image', as well as tensors indexed by blog name (e.g. 'fc6', 'fc7', ...).
 
-Since PyCaffe can be a bit of a hassel to setup, everything can be run from within a Docker image. In other words, all you need to install is Docker, then just run the `run_docker.sh` script! This uses a (pre-packaged Docker image)[https://github.com/saiprashanths/dl-docker] with Caffe and other needed libraries pre-installed.
+Since PyCaffe can be a bit of a hassel to setup, everything can be run from within a Docker image. In other words, all you need to install is Docker, then just run the `run_docker.sh` script! This uses a (https://github.com/saiprashanths/dl-docker)[pre-packaged Docker image] with Caffe and other needed libraries pre-installed.
 
 The primary script to run is `save.py`, which takes 4 command-line args:
 * `-m`/`--model`: Model directory.
@@ -17,13 +17,13 @@ For the '--model' argument to `save.py`, you'll need 3 files in the directory: `
 
 Requires
 --------
-* (Docker)[https://www.docker.com/products/docker]
+* (https://www.docker.com/products/docker)[Docker]
 * ~3gb of space
 
 OR
 
-* (Pandas)[http://pandas.pydata.org/]
-* (PyCaffe)[http://installing-caffe-the-right-way.wikidot.com/start]
+* (http://pandas.pydata.org/)[Pandas]
+* (http://installing-caffe-the-right-way.wikidot.com/start)[PyCaffe]
 
 
 Usage Instructions
@@ -38,7 +38,7 @@ If you don't already have caffe downloaded, clone the git repo:
 
     $ git clone https://github.com/BVLC/caffe
 
-The following code downloads (AlexNet)[https://github.com/BVLC/caffe/tree/master/models/bvlc_alexnet] to your caffe folder, then creates the appropriate symbolic links for each of the three needed files:
+The following code downloads (https://github.com/BVLC/caffe/tree/master/models/bvlc_alexnet)[AlexNet] to your caffe folder, then creates the appropriate symbolic links for each of the three needed files:
 
     $ CAFFE_ROOT="/path/to/caffe"
     $ $CAFFE_ROOT/scripts/download_model_binary.py $CAFFE_ROOT/models/bvlc_reference_caffenet
@@ -50,7 +50,7 @@ The following code downloads (AlexNet)[https://github.com/BVLC/caffe/tree/master
     
 #### Option 2: Other caffe models
     
-Alternatively, download a caffe model from the (Caffe Model Zoo)[https://github.com/BVLC/caffe/wiki/Model-Zoo]. Make sure to include `deploy.prototxt`, `weights.caffemodel`, and `mean.npy` files in your model directory.
+Alternatively, download a caffe model from the (https://github.com/BVLC/caffe/wiki/Model-Zoo)[Caffe Model Zoo]. Make sure to include `deploy.prototxt`, `weights.caffemodel`, and `mean.npy` files in your model directory.
 
 Note that many models will not include `mean.npy` -- you will have to create one, for example if the BGR (blue, green, red) mean is `[60, 80, 100]`:
 
@@ -85,7 +85,7 @@ For less savvy users, all you have to do after setting up your `model`, `images`
 
 #### Option 2: Install PyCaffe and run python script directly
 
-You first need to (install and setup pycaffe on your own machine)[http://installing-caffe-the-right-way.wikidot.com/start], and install the pandas package: 
+You first need to (http://installing-caffe-the-right-way.wikidot.com/start)[install and setup pycaffe] on your own machine, and install the pandas package: 
 
     $ pip install pandas
 
